@@ -2,6 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ariaieboy/jalali.svg?style=flat-square)](https://packagist.org/packages/ariaieboy/jalali)
 [![Tests](https://img.shields.io/github/actions/workflow/status/ariaieboy/jalali/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/ariaieboy/jalali/actions/workflows/run-tests.yml)
+[![PHPSTAN](https://img.shields.io/github/actions/workflow/status/ariaieboy/jalali/phpstan.yml?branch=main&label=tests&style=flat-square)](https://github.com/ariaieboy/jalali/actions/workflows/phpstan.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/ariaieboy/jalali.svg?style=flat-square)](https://packagist.org/packages/ariaieboy/jalali)
 
 This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
