@@ -3,54 +3,20 @@
 namespace Ariaieboy\Jalali;
 
 use Carbon\Carbon;
+use DateTimeZone;
 
-class Jalali
+class Jalali implements JalaliInterface
 {
     use Converter;
 
-    /**
-     * @var int
-     */
-    private $year;
-
-    /**
-     * @var int
-     */
-    private $month;
-
-    /**
-     * @var int
-     */
-    private $day;
-
-    /**
-     * @var int
-     */
-    private $hour;
-
-    /**
-     * @var int
-     */
-    private $minute;
-
-    /**
-     * @var int
-     */
-    private $second;
-
-    /**
-     * @var \DateTimeZone
-     */
-    private $timezone;
-
     public function __construct(
-        int $year,
-        int $month,
-        int $day,
-        int $hour = 0,
-        int $minute = 0,
-        int $second = 0,
-        ?\DateTimeZone $timezone = null
+        private int           $year,
+        private int           $month,
+        private int           $day,
+        private int           $hour = 0,
+        private int           $minute = 0,
+        private int $second = 0,
+        private ?DateTimeZone $timezone = null
     ) {
 
         Assertion::between($year, 1000, 3000);
@@ -67,17 +33,9 @@ class Jalali
         Assertion::between($hour, 0, 24);
         Assertion::between($minute, 0, 59);
         Assertion::between($second, 0, 59);
-
-        $this->year = $year;
-        $this->month = $month;
-        $this->day = $day;
-        $this->hour = $hour;
-        $this->minute = $minute;
-        $this->second = $second;
-        $this->timezone = $timezone;
     }
 
-    public static function now(?\DateTimeZone $timeZone = null): Jalali
+    public static function now(?DateTimeZone $timeZone = null): Jalali
     {
         return static::fromCarbon(Carbon::now($timeZone));
     }
@@ -97,12 +55,12 @@ class Jalali
         );
     }
 
-    public static function fromFormat(string $format, string $timestamp, ?\DateTimeZone $timeZone = null): Jalali
+    public static function fromFormat(string $format, string $timestamp, ?DateTimeZone $timeZone = null): Jalali
     {
         return static::fromCarbon(CalendarUtils::createCarbonFromFormat($format, $timestamp, $timeZone));
     }
 
-    public static function forge($timestamp, ?\DateTimeZone $timeZone = null): Jalali
+    public static function forge(string|\DateTimeInterface $timestamp, ?DateTimeZone $timeZone = null): Jalali
     {
         return static::fromDateTime($timestamp, $timeZone);
     }
@@ -110,7 +68,7 @@ class Jalali
     /**
      * @param  \DateTimeInterface| string  $dateTime
      */
-    public static function fromDateTime($dateTime, ?\DateTimeZone $timeZone = null): Jalali
+    public static function fromDateTime($dateTime, ?DateTimeZone $timeZone = null): Jalali
     {
         if (is_numeric($dateTime)) {
             return static::fromCarbon(Carbon::createFromTimestamp($dateTime, $timeZone));
@@ -158,7 +116,7 @@ class Jalali
         );
     }
 
-    public function getMonthDays()
+    public function getMonthDays(): int
     {
         if ($this->getMonth() <= 6) {
             return 31;
@@ -181,10 +139,7 @@ class Jalali
         return CalendarUtils::isLeapJalaliYear($this->getYear());
     }
 
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear(): int
     {
         return $this->year;
     }
@@ -198,7 +153,7 @@ class Jalali
         if ($diff >= 1) {
             $day = $this->getDay();
             $targetMonthDays = $this->getDaysOf($diff);
-            $targetDay = $day <= $targetMonthDays ? $day : $targetMonthDays;
+            $targetDay = min($day, $targetMonthDays);
 
             return new static(
                 $this->getYear(),
@@ -261,7 +216,7 @@ class Jalali
     }
 
     /**
-     * @return \DateTimeZone|null
+     * @return DateTimeZone|null
      */
     public function getTimezone()
     {
@@ -288,7 +243,7 @@ class Jalali
         Assertion::greaterOrEqualThan($months, 1);
 
         $years = (int) ($months / 12);
-        $months = (int) ($months % 12);
+        $months = ($months % 12);
         $date = $years > 0 ? $this->addYears($years) : clone $this;
 
         while ($months > 0) {
@@ -479,6 +434,22 @@ class Jalali
         return $this->toCarbon()->isPast();
     }
 
+    /**
+     * @return array{
+     * 'year' : int,
+     * 'month' : int,
+     * 'day' : int,
+     * 'dayOfWeek' : int,
+     * 'dayOfYear' : int,
+     * 'hour' : int,
+     * 'minute' : int,
+     * 'second' : int,
+     * 'micro' : int,
+     * 'timestamp' : float|int|string,
+     * 'formatted' : string,
+     * 'timezone' : DateTimeZone|null,
+     * }
+     */
     public function toArray(): array
     {
         return [
@@ -591,11 +562,6 @@ class Jalali
         $now = time();
         $time = $this->getTimestamp();
 
-        // catch error
-        if (! $time) {
-            return false;
-        }
-
         // build period and length arrays
         $periods = ['ثانیه', 'دقیقه', 'ساعت', 'روز', 'هفته', 'ماه', 'سال', 'قرن'];
         $lengths = [60, 60, 24, 7, 4.35, 12, 10];
@@ -608,9 +574,9 @@ class Jalali
             $difference = abs($difference); // absolute value
             $negative = true;
         }
-
+        $j =0;
         // do math
-        for ($j = 0; $difference >= $lengths[$j] and $j < count($lengths) - 1; $j++) {
+        for ($j; $difference >= $lengths[$j] and $j < count($lengths) - 1; $j++) {
             $difference /= $lengths[$j];
         }
 
@@ -658,6 +624,6 @@ class Jalali
 
     public function getWeekOfMonth(): int
     {
-        return floor(($this->day + 5 - $this->getDayOfWeek()) / 7) + 1;
+        return (int)floor(($this->day + 5 - $this->getDayOfWeek()) / 7) + 1;
     }
 }

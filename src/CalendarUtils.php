@@ -487,11 +487,9 @@ class CalendarUtils
     }
 
     /**
-     * @param  bool  $stamp
      * @param  null  $timezone
-     * @return mixed
      */
-    public static function strftime($format, $stamp = false, $timezone = null)
+    public static function strftime($format, Carbon|false $stamp = false, $timezone = null):string
     {
         $str_format_code = [
             '%a',
@@ -750,10 +748,9 @@ class CalendarUtils
     }
 
     /**
-     * @param  null  $timezone
      * @return Carbon
      */
-    public static function createCarbonFromFormat($format, $str, $timezone = null)
+    public static function createCarbonFromFormat($format, $str, ?\DateTimeZone $timezone = null)
     {
         $dateTime = self::createDatetimeFromFormat($format, $str, $timezone);
 
