@@ -1,9 +1,9 @@
 <?php
-
+declare(strict_types=1);
 namespace Ariaieboy\Jalali;
 
 use Carbon\Exceptions\UnitException;
-use Date;
+use Carbon\Traits\Date;
 
 /**
  * Trait Converter.

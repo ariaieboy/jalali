@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Ariaieboy\Jalali;
 
 use Carbon\Carbon;
+use Exception;
 
 /**
  * Class jDateTime
@@ -13,26 +15,21 @@ class CalendarUtils
 
     public const AFGHAN_MONTHS_NAME = ['حمل', 'ثور', 'جوزا', 'سرطان', 'اسد', 'سنبله', 'میزان', 'عقرب', 'قوس', 'جدی', 'دلو', 'حوت'];
 
-    private static $monthNames = self::IRANIAN_MONTHS_NAME;
-
-    private static $temp;
-
     /**
-     * Set globally afghan months names as default month name
-     *
-     * @return void
+     * @var string[]
      */
-    public static function useAfghanMonthsName()
+    private static array $monthNames = self::IRANIAN_MONTHS_NAME;
+    /**
+     * @var string[]
+     */
+    private static array $temp;
+
+    public static function useAfghanMonthsName(): void
     {
         self::$monthNames = self::AFGHAN_MONTHS_NAME;
     }
 
-    /**
-     * Set globally iranian months names as default month name
-     *
-     * @return void
-     */
-    public static function useIranianMonthsName()
+    public static function useIranianMonthsName(): void
     {
         self::$monthNames = self::IRANIAN_MONTHS_NAME;
     }
@@ -40,12 +37,12 @@ class CalendarUtils
     /**
      * Converts a Gregorian date to Jalali.
      *
-     * @return array
+     * @return array{0:int,1:int,2:int}
      *               0: Year
      *               1: Month
      *               2: Day
      */
-    public static function toJalali($gy, $gm, $gd)
+    public static function toJalali(int $gy, int $gm, int $gd): array
     {
         return self::d2j(self::g2d($gy, $gm, $gd));
     }
@@ -53,28 +50,20 @@ class CalendarUtils
     /**
      * Converts a Jalali date to Gregorian.
      *
-     * @param  int  $jy
-     * @param  int  $jm
-     * @param  int  $jd
-     * @return array
+     * @return array{0:int,1:int,2:int}
      *               0: Year
      *               1: Month
      *               2: Day
      */
-    public static function toGregorian($jy, $jm, $jd)
+    public static function toGregorian(int $jy, int $jm, int $jd): array
     {
         return self::d2g(self::j2d($jy, $jm, $jd));
     }
 
     /**
      * Converts a Jalali date to Gregorian.
-     *
-     * @param  int  $jy
-     * @param  int  $jm
-     * @param  int  $jd
-     * @return Gregorian DateTime
      */
-    public static function toGregorianDate($jy, $jm, $jd)
+    public static function toGregorianDate(int $jy, int $jm, int $jd): \DateTime
     {
         $georgianDateArr = self::toGregorian($jy, $jm, $jd);
         $year = $georgianDateArr[0];
@@ -87,14 +76,9 @@ class CalendarUtils
     }
 
     /**
-     * Checks whether a Jalaali date is valid or not.
-     *
-     * @param  int  $jy
-     * @param  int  $jm
-     * @param  int  $jd
-     * @return bool
+     * Checks whether a jalali date is valid or not.
      */
-    public static function isValidateJalaliDate($jy, $jm, $jd)
+    public static function isValidateJalaliDate(int $jy, int $jm, int $jd): bool
     {
         return $jy >= -61 && $jy <= 3177
             && $jm >= 1 && $jm <= 12
@@ -103,33 +87,24 @@ class CalendarUtils
 
     /**
      * Checks whether a date is valid or not.
-     *
-     * @param  bool  $isJalali
-     * @return bool
      */
-    public static function checkDate($year, $month, $day, $isJalali = true)
+    public static function checkDate(int $year, int $month, int $day, bool $isJalali = true): bool
     {
         return $isJalali === true ? self::isValidateJalaliDate($year, $month, $day) : checkdate($month, $day, $year);
     }
 
     /**
      *  Is this a leap year or not?
-     *
-     * @return bool
      */
-    public static function isLeapJalaliYear($jy)
+    public static function isLeapJalaliYear(int $jy): bool
     {
         return self::jalaliCal($jy)['leap'] === 0;
     }
 
     /**
-     * Number of days in a given month in a Jalaali year.
-     *
-     * @param  int  $jy
-     * @param  int  $jm
-     * @return int
+     * Number of days in a given month in a Jalali year.
      */
-    public static function jalaliMonthLength($jy, $jm)
+    public static function jalaliMonthLength(int $jy, int $jm): int
     {
         if ($jm <= 6) {
             return 31;
@@ -143,22 +118,22 @@ class CalendarUtils
     }
 
     /**
-     * This function determines if the Jalaali (Persian) year is
+     * This function determines if the jalali (Persian) year is
      * leap (366-day long) or is the common year (365 days), and
      * finds the day in March (Gregorian calendar) of the first
-     * day of the Jalaali year (jy).
+     * day of the jalali year (jy).
      *
-     * @param  int  $jy  Jalaali calendar year (-61 to 3177)
-     * @return array
+     * @param int $jy jalali calendar year (-61 to 3177)
+     * @return array{'leap':int,'gy':int,'march':int}
      *               leap: number of years since the last leap year (0 to 4)
-     *               gy: Gregorian year of the beginning of Jalaali year
+     *               gy: Gregorian year of the beginning of jalali year
      *               march: the March day of Farvardin the 1st (1st day of jy)
      *
      * @see: http://www.astro.uni.torun.pl/~kb/Papers/EMP/PersianC-EMP.htm
      *
      * @see: http://www.fourmilab.ch/documents/calendar/
      */
-    public static function jalaliCal($jy)
+    public static function jalaliCal(int $jy): array
     {
         $breaks = [
             -61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178,
@@ -171,7 +146,7 @@ class CalendarUtils
         $jp = $breaks[0];
 
         if ($jy < $jp || $jy >= $breaks[$breaksCount - 1]) {
-            throw new \InvalidArgumentException('Invalid Jalali year : '.$jy);
+            throw new \InvalidArgumentException('Invalid Jalali year : ' . $jy);
         }
 
         $jump = 0;
@@ -218,23 +193,20 @@ class CalendarUtils
         ];
     }
 
-    public static function div($a, $b): int
+    public static function div(int $a, int $b): int
     {
         return intdiv($a, $b);
     }
 
-    /**
-     * @return mixed
-     */
-    public static function mod($a, $b): int
+    public static function mod(int $a, int $b): int
     {
         return $a - intdiv($a, $b) * $b;
     }
 
     /**
-     * @return array
+     * @return array{0:int,1:int,2:int}
      */
-    public static function d2g($jdn)
+    public static function d2g(int $jdn): array
     {
         $j = 4 * $jdn + 139361631;
         $j += self::div(self::div(4 * $jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
@@ -254,28 +226,28 @@ class CalendarUtils
      * The procedure was tested to be good since 1 March, -100100 (of both
      * calendars) up to a few million years into the future.
      *
-     * @param  int  $gy  Calendar year (years BC numbered 0, -1, -2, ...)
-     * @param  int  $gm  Calendar month (1 to 12)
-     * @param  int  $gd  Calendar day of the month (1 to 28/29/30/31)
+     * @param int $gy Calendar year (years BC numbered 0, -1, -2, ...)
+     * @param int $gm Calendar month (1 to 12)
+     * @param int $gd Calendar day of the month (1 to 28/29/30/31)
      * @return int Julian Day number
      */
-    public static function g2d($gy, $gm, $gd)
+    public static function g2d(int $gy, int $gm, int $gd): int
     {
         return (self::div(($gy + self::div($gm - 8, 6) + 100100) * 1461, 4)
-            + self::div(153 * self::mod($gm + 9, 12) + 2, 5)
-            + $gd - 34840408
-        ) - self::div(self::div($gy + 100100 + self::div($gm - 8, 6), 100) * 3, 4) + 752;
+                + self::div(153 * self::mod($gm + 9, 12) + 2, 5)
+                + $gd - 34840408
+            ) - self::div(self::div($gy + 100100 + self::div($gm - 8, 6), 100) * 3, 4) + 752;
     }
 
     /**
-     * Converts a date of the Jalaali calendar to the Julian Day number.
+     * Converts a date of the jalali calendar to the Julian Day number.
      *
-     * @param  int  $jy  Jalaali year (1 to 3100)
-     * @param  int  $jm  Jalaali month (1 to 12)
-     * @param  int  $jd  Jalaali day (1 to 29/31)
+     * @param int $jy jalali year (1 to 3100)
+     * @param int $jm jalali month (1 to 12)
+     * @param int $jd jalali day (1 to 29/31)
      * @return int Julian Day number
      */
-    public static function j2d($jy, $jm, $jd)
+    public static function j2d(int $jy, int $jm, int $jd): int
     {
         $jCal = self::jalaliCal($jy);
 
@@ -283,15 +255,15 @@ class CalendarUtils
     }
 
     /**
-     * Converts the Julian Day number to a date in the Jalaali calendar.
+     * Converts the Julian Day number to a date in the jalali calendar.
      *
-     * @param  int  $jdn  Julian Day number
-     * @return array
-     *               0: Jalaali year (1 to 3100)
-     *               1: Jalaali month (1 to 12)
-     *               2: Jalaali day (1 to 29/31)
+     * @param int $jdn Julian Day number
+     * @return array{0:int,1:int,2:int}
+     *               0: jalali year (1 to 3100)
+     *               1: jalali month (1 to 12)
+     *               2: jalali day (1 to 29/31)
      */
-    public static function d2j($jdn)
+    public static function d2j(int $jdn): array
     {
         $gy = self::d2g($jdn)[0];
         $jy = $gy - 621;
@@ -325,17 +297,15 @@ class CalendarUtils
     }
 
     /**
-     * @param  bool  $stamp
-     * @param  bool  $timezone
-     * @return mixed
+     * @throws Exception
      */
-    public static function date($format, $stamp = false, $timezone = null)
+    public static function date(string $format, \DateTime|false $stamp = false, string|null|\DateTimeZone $timezone = null): string
     {
         $stamp = ($stamp !== false) ? $stamp : time();
         $dateTime = static::createDateTime($stamp, $timezone);
 
         //Find what to replace
-        $chars = (preg_match_all('/([a-zA-Z]{1})/', $format, $chars)) ? $chars[0] : [];
+        $chars = ((bool)preg_match_all('/([a-zA-Z]{1})/', $format, $chars)) ? $chars[0] : [];
 
         //Intact Keys
         $intact = ['B', 'h', 'H', 'g', 'G', 'i', 's', 'I', 'U', 'u', 'Z', 'O', 'P'];
@@ -348,7 +318,7 @@ class CalendarUtils
         //End Intact Keys
 
         //Changed Keys
-        [$year, $month, $day] = [$dateTime->format('Y'), $dateTime->format('n'), $dateTime->format('j')];
+        [$year, $month, $day] = [(int)$dateTime->format('Y'), (int)$dateTime->format('n'), (int)$dateTime->format('j')];
         [$jYear, $jMonth, $jDay] = self::toJalali($year, $month, $day);
 
         $keys = [
@@ -411,13 +381,13 @@ class CalendarUtils
                     } else {
                         $v = (($jMonth - 1) * 31) + $jDay;
                     }
-                    self::$temp['z'] = $v;
+                    self::$temp['z'] = (string)$v;
                     break;
-                    //Week
+                //Week
                 case 'W':
-                    $v = is_int(self::$temp['z'] / 7) ? (self::$temp['z'] / 7) : intval(self::$temp['z'] / 7 + 1);
+                    $v = is_int((int)self::$temp['z'] / 7) ? ((int)self::$temp['z'] / 7) : intval((int)self::$temp['z'] / 7 + 1);
                     break;
-                    //Month
+                //Month
                 case 'F':
                     $v = self::getMonthName($jMonth);
                     break;
@@ -431,9 +401,9 @@ class CalendarUtils
                     $v = $jMonth;
                     break;
                 case 't':
-                    $v = ($jMonth == 12) ? (self::isLeapJalaliYear($jYear) ? 30 : 29) : ($jMonth > 6 ? 30 : 31);
+                    $v = ($jMonth === 12) ? (self::isLeapJalaliYear($jYear) ? 30 : 29) : ($jMonth > 6 ? 30 : 31);
                     break;
-                    //Year
+                //Year
                 case 'L':
                     $tmpObj = static::createDateTime(time() - 31536000, $timezone);
                     $v = $tmpObj->format('L');
@@ -445,29 +415,29 @@ class CalendarUtils
                 case 'y':
                     $v = $jYear % 100;
                     if ($v < 10) {
-                        $v = '0'.$v;
+                        $v = '0' . $v;
                     }
                     break;
-                    //Time
+                //Time
                 case 'a':
-                    $v = ($dateTime->format('a') == 'am') ? 'ق.ظ' : 'ب.ظ';
+                    $v = ($dateTime->format('a') === 'am') ? 'ق.ظ' : 'ب.ظ';
                     break;
                 case 'A':
-                    $v = ($dateTime->format('A') == 'AM') ? 'قبل از ظهر' : 'بعد از ظهر';
+                    $v = ($dateTime->format('A') === 'AM') ? 'قبل از ظهر' : 'بعد از ظهر';
                     break;
-                    //Full Dates
+                //Full Dates
                 case 'c':
-                    $v = $jYear.'-'.sprintf('%02d', $jMonth).'-'.sprintf('%02d', $jDay).'T';
-                    $v .= $dateTime->format('H').':'.$dateTime->format('i').':'.$dateTime->format('s').$dateTime->format('P');
+                    $v = $jYear . '-' . sprintf('%02d', $jMonth) . '-' . sprintf('%02d', $jDay) . 'T';
+                    $v .= $dateTime->format('H') . ':' . $dateTime->format('i') . ':' . $dateTime->format('s') . $dateTime->format('P');
                     break;
                 case 'r':
-                    $v = self::getDayNames($dateTime->format('D'), true).', '.sprintf(
-                        '%02d',
-                        $jDay
-                    ).' '.self::getMonthName($jMonth, true);
-                    $v .= ' '.$jYear.' '.$dateTime->format('H').':'.$dateTime->format('i').':'.$dateTime->format('s').' '.$dateTime->format('P');
+                    $v = self::getDayNames($dateTime->format('D'), true) . ', ' . sprintf(
+                            '%02d',
+                            $jDay
+                        ) . ' ' . self::getMonthName($jMonth, true);
+                    $v .= ' ' . $jYear . ' ' . $dateTime->format('H') . ':' . $dateTime->format('i') . ':' . $dateTime->format('s') . ' ' . $dateTime->format('P');
                     break;
-                    //Timezone
+                //Timezone
                 case 'e':
                     $v = $dateTime->format('e');
                     break;
@@ -486,10 +456,7 @@ class CalendarUtils
         return strtr($format, array_combine($keys, $values));
     }
 
-    /**
-     * @param  null  $timezone
-     */
-    public static function strftime($format, Carbon|false $stamp = false, $timezone = null):string
+    public static function strftime(string $format, Carbon|false $stamp = false, string|null|\DateTimeZone $timezone = null): string
     {
         $str_format_code = [
             '%a',
@@ -584,7 +551,10 @@ class CalendarUtils
         return self::date($format, $stamp, $timezone);
     }
 
-    private static function getDayNames($day, $shorten = false, $len = 1, $numeric = false)
+    /**
+     * @return ($numeric is true ? int : string)
+     */
+    private static function getDayNames(string $day, bool $shorten = false, int $len = 1, bool $numeric = false): int|string
     {
         switch (strtolower($day)) {
             case 'sat':
@@ -630,18 +600,19 @@ class CalendarUtils
         return ($numeric) ? $n : (($shorten) ? mb_substr($ret, 0, $len, 'UTF-8') : $ret);
     }
 
-    private static function getMonthName($month, $shorten = false, $len = 3)
+    private static function getMonthName(int $month, bool $shorten = false, int $len = 3): string
     {
-        $monthIndex = ((int) $month) - 1;
-        $monthName = static::$monthNames[$monthIndex];
+        $monthIndex = ($month) - 1;
+        $monthName = self::$monthNames[$monthIndex];
 
         return ($shorten) ? mb_substr($monthName, 0, $len, 'UTF-8') : $monthName;
     }
 
-    private static function filterArray($needle, $haystack, $always = [])
+    /** @phpstan-ignore-next-line */
+    private static function filterArray(array $needle, array $haystack, array $always = []): array
     {
         foreach ($haystack as $k => $v) {
-            if (! in_array($v, $needle) && ! in_array($v, $always)) {
+            if (!in_array($v, $needle, true) && !in_array($v, $always, true)) {
                 unset($haystack[$k]);
             }
         }
@@ -650,9 +621,9 @@ class CalendarUtils
     }
 
     /**
-     * @return array
+     * @return array{'year':int,'month':int,'day':int,'hour':int,'minute':int,'second':int}
      */
-    public static function parseFromFormat($format, $date)
+    public static function parseFromFormat(string $format, string $date): array
     {
         // reverse engineer date formats
         $keys = [
@@ -679,10 +650,10 @@ class CalendarUtils
         $regex = '';
         $chars = str_split($format);
         foreach ($chars as $n => $char) {
-            $lastChar = isset($chars[$n - 1]) ? $chars[$n - 1] : '';
+            $lastChar = $chars[$n - 1] ?? '';
             $skipCurrent = $lastChar == '\\';
-            if (! $skipCurrent && isset($keys[$char])) {
-                $regex .= '(?P<'.$keys[$char][0].'>'.$keys[$char][1].')';
+            if (!$skipCurrent && isset($keys[$char])) {
+                $regex .= '(?P<' . $keys[$char][0] . '>' . $keys[$char][1] . ')';
             } else {
                 if ($char == '\\') {
                     $regex .= $char;
@@ -695,13 +666,13 @@ class CalendarUtils
         $dt = [];
         $dt['error_count'] = 0;
         // now try to match it
-        if (preg_match('#^'.$regex.'$#', $date, $dt)) {
+        if (preg_match('#^' . $regex . '$#', $date, $dt)) {
             foreach ($dt as $k => $v) {
                 if (is_int($k)) {
                     unset($dt[$k]);
                 }
             }
-            if (! CalendarUtils::checkdate($dt['month'], $dt['day'], $dt['year'], false)) {
+            if (!CalendarUtils::checkdate((int)$dt['month'], (int)$dt['day'], (int)$dt['year'], false)) {
                 $dt['error_count'] = 1;
             }
         } else {
@@ -716,30 +687,29 @@ class CalendarUtils
         $dt['zone'] = 0;
         $dt['is_dst'] = '';
 
-        if (strlen($dt['year']) == 2) {
-            $now = Jalalian::forge('now');
-            $x = $now->format('Y') - $now->format('y');
-            $dt['year'] += $x;
+        if (is_string($dt['year']) && strlen($dt['year']) === 2) {
+            $now = Jalali::forge('now');
+            $x = (int)$now->format('Y') - (int)$now->format('y');
+            $dt['year'] = (int)$dt['year'] + $x;
         }
 
-        $dt['year'] = isset($dt['year']) ? (int) $dt['year'] : 0;
-        $dt['month'] = isset($dt['month']) ? (int) $dt['month'] : 0;
-        $dt['day'] = isset($dt['day']) ? (int) $dt['day'] : 0;
-        $dt['hour'] = isset($dt['hour']) ? (int) $dt['hour'] : 0;
-        $dt['minute'] = isset($dt['minute']) ? (int) $dt['minute'] : 0;
-        $dt['second'] = isset($dt['second']) ? (int) $dt['second'] : 0;
+        $dt['year'] = isset($dt['year']) ? (int)$dt['year'] : 0;
+        $dt['month'] = isset($dt['month']) ? (int)$dt['month'] : 0;
+        $dt['day'] = isset($dt['day']) ? (int)$dt['day'] : 0;
+        $dt['hour'] = isset($dt['hour']) ? (int)$dt['hour'] : 0;
+        $dt['minute'] = isset($dt['minute']) ? (int)$dt['minute'] : 0;
+        $dt['second'] = isset($dt['second']) ? (int)$dt['second'] : 0;
 
         return $dt;
     }
 
     /**
-     * @param  null  $timezone
-     * @return \DateTime
+     * @throws Exception
      */
-    public static function createDatetimeFromFormat($format, $str, $timezone = null)
+    public static function createDatetimeFromFormat(string $format, string $str, \DateTimeZone|null $timezone = null): \DateTime
     {
         $pd = self::parseFromFormat($format, $str);
-        $gd = self::toGregorian($pd['year'], $pd['month'], $pd['day']);
+        $gd = self::toGregorian((int)$pd['year'], (int)$pd['month'], (int)$pd['day']);
         $date = self::createDateTime('now', $timezone);
         $date->setDate($gd[0], $gd[1], $gd[2]);
         $date->setTime($pd['hour'], $pd['minute'], $pd['second']);
@@ -747,10 +717,7 @@ class CalendarUtils
         return $date;
     }
 
-    /**
-     * @return Carbon
-     */
-    public static function createCarbonFromFormat($format, $str, ?\DateTimeZone $timezone = null)
+    public static function createCarbonFromFormat(string $format, string $str, \DateTimeZone|null $timezone = null): Carbon
     {
         $dateTime = self::createDatetimeFromFormat($format, $str, $timezone);
 
@@ -759,16 +726,12 @@ class CalendarUtils
 
     /**
      * Convert Latin numbers to persian numbers and vice versa
-     *
-     * @param  string  $string
-     * @param  bool  $toEnglish,  default is false to save compatiblity
-     * @return string
      */
-    public static function convertNumbers($string, $toLatin = false)
+    public static function convertNumbers(string $string, bool $toLatin = false): string
     {
         $farsi_array = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
         $english_array = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        if (! $toLatin) {
+        if (!$toLatin) {
             return str_replace($english_array, $farsi_array, $string);
         }
 
@@ -776,10 +739,9 @@ class CalendarUtils
     }
 
     /**
-     * @param  null  $timezone
-     * @return \DateTime|static
+     * @throws Exception
      */
-    public static function createDateTime($timestamp = null, $timezone = null)
+    public static function createDateTime(null|int|string|\DateTimeInterface $timestamp = null, null|string|\DateTimeZone $timezone = null): \DateTime
     {
         $timezone = static::createTimeZone($timezone);
 
@@ -787,7 +749,7 @@ class CalendarUtils
             return Carbon::now($timezone);
         }
 
-        if ($timestamp instanceof \DateTimeInterface) {
+        if ($timestamp instanceof \DateTime) {
             return $timestamp;
         }
 
@@ -803,10 +765,9 @@ class CalendarUtils
     }
 
     /**
-     * @param  null  $timezone
-     * @return \DateTimeZone|null
+     * @throws Exception
      */
-    public static function createTimeZone($timezone = null)
+    public static function createTimeZone(\DateTimeZone|null|string $timezone = null): \DateTimeZone
     {
         if ($timezone instanceof \DateTimeZone) {
             return $timezone;
@@ -816,10 +777,6 @@ class CalendarUtils
             return new \DateTimeZone(date_default_timezone_get());
         }
 
-        if (is_string($timezone)) {
-            return new \DateTimeZone($timezone);
-        }
-
-        throw new \InvalidArgumentException('timezone is not valid');
+        return new \DateTimeZone($timezone);
     }
 }
