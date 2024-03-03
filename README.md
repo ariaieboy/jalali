@@ -16,6 +16,7 @@
 - Automated testing
 - Level 9 PHPStan check
 - Carbon 3 support
+- Only dependant on Carbon
 
 ## Installation
 
