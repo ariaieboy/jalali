@@ -301,7 +301,7 @@ class CalendarUtils
     /**
      * @throws Exception
      */
-    public static function date(string $format, \DateTime|false $stamp = false, string|null|\DateTimeZone $timezone = null): string
+    public static function date(string $format, \DateTime|int|false $stamp = false, string|null|\DateTimeZone $timezone = null): string
     {
         $stamp = ($stamp !== false) ? $stamp : time();
         $dateTime = static::createDateTime($stamp, $timezone);
@@ -458,7 +458,7 @@ class CalendarUtils
         return strtr($format, array_combine($keys, $values));
     }
 
-    public static function strftime(string $format, Carbon|false $stamp = false, string|null|\DateTimeZone $timezone = null): string
+    public static function strftime(string $format, Carbon|int|false $stamp = false, string|null|\DateTimeZone $timezone = null): string
     {
         $str_format_code = [
             '%a',
