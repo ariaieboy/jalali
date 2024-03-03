@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ariaieboy/jalali.svg?style=flat-square)](https://packagist.org/packages/ariaieboy/jalali)
 [![Tests](https://img.shields.io/github/actions/workflow/status/ariaieboy/jalali/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/ariaieboy/jalali/actions/workflows/run-tests.yml)
-[![PHPSTAN](https://img.shields.io/github/actions/workflow/status/ariaieboy/jalali/phpstan.yml?branch=main&label=tests&style=flat-square)](https://github.com/ariaieboy/jalali/actions/workflows/phpstan.yml)
+[![PHPSTAN](https://img.shields.io/github/actions/workflow/status/ariaieboy/jalali/phpstan.yml?branch=main&label=PHPStan&style=flat-square)](https://github.com/ariaieboy/jalali/actions/workflows/phpstan.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/ariaieboy/jalali.svg?style=flat-square)](https://packagist.org/packages/ariaieboy/jalali)
 
 
