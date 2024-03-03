@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Ariaieboy\Jalali;
 
 use Carbon\Carbon;
@@ -10,11 +12,11 @@ class Jalali implements JalaliInterface
     use Converter;
 
     public function __construct(
-        private int           $year,
-        private int           $month,
-        private int           $day,
-        private int           $hour = 0,
-        private int           $minute = 0,
+        private int $year,
+        private int $month,
+        private int $day,
+        private int $hour = 0,
+        private int $minute = 0,
         private int $second = 0,
         private ?DateTimeZone $timezone = null
     ) {
@@ -574,7 +576,7 @@ class Jalali implements JalaliInterface
             $difference = abs($difference); // absolute value
             $negative = true;
         }
-        $j =0;
+        $j = 0;
         // do math
         for ($j; $difference >= $lengths[$j] and $j < count($lengths) - 1; $j++) {
             $difference /= $lengths[$j];
@@ -624,6 +626,6 @@ class Jalali implements JalaliInterface
 
     public function getWeekOfMonth(): int
     {
-        return (int)floor(($this->day + 5 - $this->getDayOfWeek()) / 7) + 1;
+        return (int) floor(($this->day + 5 - $this->getDayOfWeek()) / 7) + 1;
     }
 }

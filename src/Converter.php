@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Ariaieboy\Jalali;
 
 use Carbon\Exceptions\UnitException;
