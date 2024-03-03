@@ -68,7 +68,6 @@ final class JalaliTest extends TestCase
             $this->assertEquals($month - 1, $jDate->subMonths()->getMonth());
         }
 
-
         $jDate = Jalali::fromFormat('Y-m-d', '1397-12-12');
         $this->assertEquals('1398-01-12', $jDate->addMonths(1)->format('Y-m-d'));
 
@@ -135,7 +134,6 @@ final class JalaliTest extends TestCase
         $jDate = new Jalali(1390, 8, 7);
         $this->assertEquals($jDate->getWeekOfMonth(), 2);
 
-
         $jDate = new Jalali(1390, 8, 27);
         $this->assertEquals($jDate->getWeekOfMonth(), 4);
 
@@ -160,7 +158,7 @@ final class JalaliTest extends TestCase
         $jDate = new Jalali(1401, 3, 7);
         $this->assertEquals($jDate->getWeekOfMonth(), 2);
     }
-    
+
     public function testGetFirstDayOfWeek()
     {
         $jDate = new Jalali(1401, 1, 23);

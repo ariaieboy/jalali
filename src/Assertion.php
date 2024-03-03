@@ -2,8 +2,6 @@
 
 namespace Ariaieboy\Jalali;
 
-use http\Exception\InvalidArgumentException;
-
 class Assertion
 {
     public static function between(int $value, int $min, int $max): bool
@@ -11,6 +9,7 @@ class Assertion
         if ($min > $value || $max < $value) {
             throw new \InvalidArgumentException('Invalid value range');
         }
+
         return true;
     }
 
@@ -19,6 +18,7 @@ class Assertion
         if ($value < $limit) {
             throw new \InvalidArgumentException('Invalid value range');
         }
+
         return true;
     }
 }

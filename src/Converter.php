@@ -13,7 +13,6 @@ use Date;
  */
 trait Converter
 {
-
     /**
      * Format the instance as date
      *
@@ -21,7 +20,7 @@ trait Converter
      */
     public function toDateString()
     {
-        return $this->format("Y/m/d");
+        return $this->format('Y/m/d');
     }
 
     /**
@@ -47,8 +46,7 @@ trait Converter
     /**
      * Format the instance as time
      *
-     * @param string $unitPrecision
-     *
+     * @param  string  $unitPrecision
      * @return string
      */
     public function toTimeString($unitPrecision = 'second')
@@ -59,32 +57,29 @@ trait Converter
     /**
      * Format the instance as date and time
      *
-     * @param string $unitPrecision
-     *
+     * @param  string  $unitPrecision
      * @return string
      */
     public function toDateTimeString($unitPrecision = 'second')
     {
-        return $this->format('Y/m/d ' . static::getTimeFormatByPrecision($unitPrecision));
+        return $this->format('Y/m/d '.static::getTimeFormatByPrecision($unitPrecision));
     }
 
     /**
      * Format the instance as a readable date and time
      *
-     * @param string $unitPrecision
-     *
+     * @param  string  $unitPrecision
      * @return string
      */
     public function toFormattedDateTimeString($unitPrecision = 'second')
     {
-        return $this->format('j F Y ' . static::getTimeFormatByPrecision($unitPrecision));
+        return $this->format('j F Y '.static::getTimeFormatByPrecision($unitPrecision));
     }
 
     /**
      * Return a format from H:i to H:i:s.u according to given unit precision.
      *
-     * @param string $unitPrecision "minute", "second", "millisecond" or "microsecond"
-     *
+     * @param  string  $unitPrecision  "minute", "second", "millisecond" or "microsecond"
      * @return string
      */
     public static function getTimeFormatByPrecision($unitPrecision)
@@ -110,25 +105,23 @@ trait Converter
      * echo Jalalian::now()->toDateTimeLocalString('minute'); // You can specify precision among: minute, second, millisecond and microsecond
      * ```
      *
-     * @param string $unitPrecision
-     *
+     * @param  string  $unitPrecision
      * @return string
      */
     public function toDateTimeLocalString($unitPrecision = 'second')
     {
-        return $this->format('Y-m-d\T' . static::getTimeFormatByPrecision($unitPrecision));
+        return $this->format('Y-m-d\T'.static::getTimeFormatByPrecision($unitPrecision));
     }
 
     /**
      * Format the instance with day, date and time
      *
-     * @param string $unitPrecision
-     *
+     * @param  string  $unitPrecision
      * @return string
      */
     public function toDayDateTimeString($unitPrecision = 'second')
     {
-        return $this->format('l j F Y ' . static::getTimeFormatByPrecision($unitPrecision));
+        return $this->format('l j F Y '.static::getTimeFormatByPrecision($unitPrecision));
     }
 
     /**
@@ -140,5 +133,4 @@ trait Converter
     {
         return $this->format('F Y');
     }
-
 }

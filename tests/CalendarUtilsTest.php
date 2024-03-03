@@ -2,11 +2,11 @@
 
 namespace Ariaieboy\Jalali\Tests;
 
-use DateTime;
-use DateTimeZone;
 use Ariaieboy\Jalali\CalendarUtils;
 use Ariaieboy\Jalali\Jalali;
 use Carbon\Carbon;
+use DateTime;
+use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 
 class CalendarUtilsTest extends TestCase
@@ -43,22 +43,22 @@ class CalendarUtilsTest extends TestCase
             [
                 '2016-05-08',
                 'Y-m-d',
-                '1395-02-19'
+                '1395-02-19',
             ],
             [
                 '2022-03-24',
                 'y-m-d',
-                '01-01-04'
+                '01-01-04',
             ],
             [
                 '2023-03-24',
                 'y-m-D',
-                '02-01-ج'
+                '02-01-ج',
             ],
         ];
 
         foreach ($table as $row) {
-            list($dateTimeString, $format, $expected) = $row;
+            [$dateTimeString, $format, $expected] = $row;
             $timestamp = strtotime($dateTimeString);
             $this->assertEquals($expected, CalendarUtils::strftime($format, $timestamp));
         }
@@ -117,7 +117,7 @@ class CalendarUtilsTest extends TestCase
 
         $this->assertTrue($gDateTime instanceof \DateTime);
 
-        $this->assertTrue('2016-02-14 15:00:00' === $gDateTime->format('Y-m-d H:i:s'));
+        $this->assertTrue($gDateTime->format('Y-m-d H:i:s') === '2016-02-14 15:00:00');
     }
 
     public function testCreateCarbonFormFormat()
@@ -127,7 +127,7 @@ class CalendarUtilsTest extends TestCase
 
         $this->assertTrue($carbon instanceof Carbon);
         $this->assertTrue($carbon->day === 14);
-        $this->assertTrue('2016-02-14 15:00:00' === $carbon->format('Y-m-d H:i:s'));
+        $this->assertTrue($carbon->format('Y-m-d H:i:s') === '2016-02-14 15:00:00');
 
         $jalaiDateFormatted = Jalali::fromDateTime($carbon->toDateString())->format('Y-m-d H:i:s');
         $jalaiDateTimeFormatted = Jalali::fromDateTime($carbon->toDateTimeString())->format('Y-m-d H:i:s');
@@ -156,18 +156,17 @@ class CalendarUtilsTest extends TestCase
         $this->assertTrue((((($utcHour * 60) + $utcMin) * 60) - ((($tehranHour * 60) + $tehranMin) * 60)) === $tzOffset);
     }
 
-
     private function getTimeZoneOffset($remote_tz, $origin_tz = null)
     {
         if ($origin_tz === null) {
-            if (!is_string($origin_tz = date_default_timezone_get())) {
+            if (! is_string($origin_tz = date_default_timezone_get())) {
                 return false; // A UTC timestamp was returned -- bail out!
             }
         }
         $origin_dtz = new DateTimeZone($origin_tz);
         $remote_dtz = new DateTimeZone($remote_tz);
-        $origin_dt = new DateTime("now", $origin_dtz);
-        $remote_dt = new DateTime("now", $remote_dtz);
+        $origin_dt = new DateTime('now', $origin_dtz);
+        $remote_dt = new DateTime('now', $remote_dtz);
         $offset = $origin_dtz->getOffset($origin_dt) - $remote_dtz->getOffset($remote_dt);
 
         return $offset;
