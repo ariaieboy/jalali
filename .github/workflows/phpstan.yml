@@ -1,0 +1,25 @@
+name: PHPStan
+
+on:
+  push:
+    paths:
+      - 'src/**/**.php'
+  workflow_call:
+
+jobs:
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan
