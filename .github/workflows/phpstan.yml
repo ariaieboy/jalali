@@ -3,7 +3,7 @@ name: PHPStan
 on:
   push:
     paths:
-      - 'src/'
+      - '**.php'
   workflow_call:
 
 jobs:
