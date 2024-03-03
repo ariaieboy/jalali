@@ -29,9 +29,11 @@
     "nesbot/carbon": "^2||^3"
   },
   "require-dev": {
-    "pestphp/pest": "^2.15",
     "laravel/pint": "^1.0",
-    "phpstan/phpstan": "^1"
+    "pestphp/pest": "^2.15",
+    "phpstan/phpstan": "^1",
+    "phpstan/phpstan-deprecation-rules": "^1.1",
+    "phpstan/phpstan-strict-rules": "^1.5"
   },
   "autoload": {
     "psr-4": {
