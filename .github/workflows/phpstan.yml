@@ -4,7 +4,10 @@ on:
   push:
     paths:
       - '**.php'
-  workflow_call:
+      - '.github/workflows/run-tests.yml'
+      - 'phpunit.xml.dist'
+      - 'composer.json'
+      - 'composer.lock'
 
 jobs:
   phpstan:
@@ -19,7 +22,7 @@ jobs:
           php-version: '8.3'
 
       - name: Install composer dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v3
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan
