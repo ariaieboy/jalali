@@ -37,7 +37,7 @@ class Jalali implements JalaliInterface
         Assertion::between($second, 0, 59);
     }
 
-    public static function now(DateTimeZone|null $timeZone = null): Jalali
+    public static function now(?DateTimeZone $timeZone = null): Jalali
     {
         return static::fromCarbon(Carbon::now($timeZone));
     }
@@ -57,17 +57,17 @@ class Jalali implements JalaliInterface
         );
     }
 
-    public static function fromFormat(string $format, string $timestamp, DateTimeZone|null $timeZone = null): Jalali
+    public static function fromFormat(string $format, string $timestamp, ?DateTimeZone $timeZone = null): Jalali
     {
         return static::fromCarbon(CalendarUtils::createCarbonFromFormat($format, $timestamp, $timeZone));
     }
 
-    public static function forge(string|\DateTimeInterface $timestamp, DateTimeZone|null $timeZone = null): Jalali
+    public static function forge(string|\DateTimeInterface $timestamp, ?DateTimeZone $timeZone = null): Jalali
     {
         return static::fromDateTime($timestamp, $timeZone);
     }
 
-    public static function fromDateTime(string|\DateTimeInterface $dateTime, DateTimeZone|null $timeZone = null): Jalali
+    public static function fromDateTime(string|\DateTimeInterface $dateTime, ?DateTimeZone $timeZone = null): Jalali
     {
         if (is_numeric($dateTime)) {
             return static::fromCarbon(Carbon::createFromTimestamp($dateTime, $timeZone));
@@ -214,7 +214,7 @@ class Jalali implements JalaliInterface
         return $this->second;
     }
 
-    public function getTimezone(): DateTimeZone|null
+    public function getTimezone(): ?DateTimeZone
     {
         return $this->timezone;
     }
