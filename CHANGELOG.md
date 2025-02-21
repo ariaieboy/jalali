@@ -2,6 +2,15 @@
 
 All notable changes to `jalali` will be documented in this file.
 
+## 1.1.0 - 2025-02-21
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot in https://github.com/ariaieboy/jalali/pull/8
+* Bump aglipanci/laravel-pint-action from 2.4 to 2.5 by @dependabot in https://github.com/ariaieboy/jalali/pull/9
+
+**Full Changelog**: https://github.com/ariaieboy/jalali/compare/1.0.1...1.1.0
+
 ## 1.0.1 - 2024-10-19
 
 ### What's Changed
