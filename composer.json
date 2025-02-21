@@ -31,9 +31,9 @@
   "require-dev": {
     "laravel/pint": "^1.0",
     "pestphp/pest": "^3.2",
-    "phpstan/phpstan": "^1",
-    "phpstan/phpstan-deprecation-rules": "^1.1",
-    "phpstan/phpstan-strict-rules": "^1.5"
+    "phpstan/phpstan": "^2",
+    "phpstan/phpstan-deprecation-rules": "^2",
+    "phpstan/phpstan-strict-rules": "^2"
   },
   "autoload": {
     "psr-4": {
