@@ -2,6 +2,14 @@
 
 All notable changes to `jalali` will be documented in this file.
 
+## 1.2.1 - 2026-01-28
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 by @dependabot[bot] in https://github.com/ariaieboy/jalali/pull/17
+
+**Full Changelog**: https://github.com/ariaieboy/jalali/compare/1.2.0...1.2.1
+
 ## 1.2.0 - 2025-11-26
 
 ### What's Changed
